@@ -11,6 +11,8 @@ var Game = {
   start: function() {
     this.fps = 60;
 
+    this.reset();
+
     this.interval = setInterval(() => {
       this.clear();
       this.framesCounter++;
@@ -18,7 +20,7 @@ var Game = {
       if (this.framesCounter > 2000) {
         this.framesCounter = 0;
       }
-      this.reset();
+      
 
       this.drawAll();
     });
@@ -26,6 +28,7 @@ var Game = {
 
   reset: function() {
     this.background = new Background (this.ctx);
+    this.backgroundmoves = new BackMoves (this.ctx)
     // this.player = new Player(this.canvas.width, this.canvas.height, this.ctx, this.keys);
     this.framesCounter = 0;
   },
@@ -35,7 +38,8 @@ var Game = {
   },
 
   drawAll: function() {
-    this.background.draw();
+    this.background.draw(this.framesCounter);
+    this.backgroundmoves.draw(this.framesCounter)
   },
 }
 
