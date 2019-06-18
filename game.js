@@ -29,6 +29,8 @@ var Game = {
   reset: function() {
     this.background = new Background (this.ctx);
     this.backgroundmoves = new BackMoves (this.ctx)
+    this.player1 = new Player1(this.ctx)
+    this.player2 = new Player2(this.ctx)
     // this.player = new Player(this.canvas.width, this.canvas.height, this.ctx, this.keys);
     this.framesCounter = 0;
   },
@@ -40,6 +42,8 @@ var Game = {
   drawAll: function() {
     this.background.draw(this.framesCounter);
     this.backgroundmoves.draw(this.framesCounter)
+    this.player1.draw(this.framesCounter)
+    this.player2.draw(this.framesCounter)
   },
 }
 

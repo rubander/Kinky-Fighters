@@ -1,10 +1,10 @@
-class Player1 {
+class Player2 {
     constructor(ctx) {
       this.ctx = ctx;
       this.img = new Image();
-      this.img.src = "./img/ken_idle.png";
-      this.kenIdleX = 188;
-      this.kenIdleY = 92;
+      this.img.src = "./img/chun_idle.png";
+      this.chunIdleX = 188;
+      this.chunIdleY = 92;
       this.img.frames = 4;
       this.img.frameIndex = 0;
   
@@ -19,14 +19,14 @@ class Player1 {
       this.ctx.drawImage(
         this.img,
         this.img.frameIndex *
-          Math.floor(this.kenIdleX / this.img.frames),
+          Math.floor(this.chunIdleX / this.img.frames),
         0,
-        Math.floor(this.kenIdleX/ this.img.frames),
-        this.kenIdleY,        
-        200,
+        Math.floor(this.chunIdleX/ this.img.frames),
+        this.chunIdleY,        
+        600,
         150,
-        this.kenIdleX / 1.5,
-        this.kenIdleY * 2.5
+        this.chunIdleX / 1.5,
+        this.chunIdleY * 2.5
       );
   
       this.animateImg(framesCounter);
