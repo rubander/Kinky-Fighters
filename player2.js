@@ -1,45 +1,98 @@
 class Player2 {
-    constructor(ctx) {
-      this.ctx = ctx;
-      this.img = new Image();
-      this.img.src = "./img/chun_idle.png";
-      this.chunIdleX = 188;
-      this.chunIdleY = 92;
-      this.img.frames = 4;
-      this.img.frameIndex = 0;
-  
-      // this.imgred = new Image();
-      // this.imgred.src = "./img/bg/kenbg1200.png"
-  
-      // this.x = 0;
-      // this.y = 0;
-    }
-  
-    draw(framesCounter) {
-      this.ctx.drawImage(
-        this.img,
-        this.img.frameIndex *
-          Math.floor(this.chunIdleX / this.img.frames),
-        0,
-        Math.floor(this.chunIdleX/ this.img.frames),
-        this.chunIdleY,        
-        600,
-        150,
-        this.chunIdleX / 1.5,
-        this.chunIdleY * 2.5
-      );
-  
-      this.animateImg(framesCounter);
-    }
-  
-    animateImg(framesCounter) {
-      // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
-      if (framesCounter % 25 === 0) {
-        this.img.frameIndex += 1;
-  
-        // Si el frame es el último, se vuelve al primero
-        if (this.img.frameIndex > 2) this.img.frameIndex = 0;
-      }
+  constructor(ctx, keys) {
+    this.ctx = ctx;
+    this.keys = keys;
+    this.states = {
+      left: false,
+      right: false
+    };
+    this.startPointX = 660;
+    this.startPointY = 150;
+
+    // Idle Image
+    this.imgIdlep2 = new Image();
+    this.imgIdlep2.src = "./img/chun_idle.png";
+    this.chunIdleX = 188;
+    this.chunIdleY = 92;
+    this.imgIdlep2.frames = 4;
+    this.imgIdlep2.frameIndex = 0;
+
+    // Walk Image
+    this.imgWalkp2 = new Image();
+    this.imgWalkp2.src = "./img/chun_walk.png";
+    this.chunWalkX = 416;
+    this.chunWalkY = 92;
+    this.imgWalkp2.frames = 8;
+    this.imgWalkp2.frameIndex = 0;
+  }
+
+  draw(framesCounter) {
+    if (this.states.left || this.states.right) {
+      this.drawWalk(framesCounter);
+    } else {
+      this.drawIdle(framesCounter);
     }
   }
-  // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+  drawIdle(framesCounter) {
+    this.ctx.drawImage(
+      this.imgIdlep2,
+      this.imgIdlep2.frameIndex *
+        Math.floor(this.chunIdleX / this.imgIdlep2.frames),
+      0,
+      Math.floor(this.chunIdleX / this.imgIdlep2.frames),
+      this.chunIdleY,
+      this.startPointX,
+      this.startPointY,
+      this.chunIdleX / 1.5,
+      this.chunIdleY * 2.5
+    );
+
+    this.animateImgIdle(framesCounter);
+  }
+
+  animateImgIdle(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 40 === 0) {
+      this.imgIdlep2.frameIndex += 1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgIdlep2.frameIndex > 2) this.imgIdlep2.frameIndex = 0;
+    }
+  }
+
+  drawWalk(framesCounter) {
+    this.ctx.drawImage(
+      this.imgWalkp2,
+      this.imgWalkp2.frameIndex *
+        Math.floor(this.chunWalkX / this.imgWalkp2.frames),
+      0,
+      Math.floor(this.chunWalkX / this.imgWalkp2.frames),
+      this.chunWalkY,
+      this.startPointX,
+      this.startPointY,
+      this.chunWalkX / 3,
+      this.chunWalkY * 2.5
+    );
+
+    this.animateImgWalk(framesCounter);
+  }
+
+  animateImgWalk(framesCounter) {
+    if (framesCounter % 40 === 0) {
+      this.imgWalkp2.frameIndex += 1;
+
+      if (this.imgWalkp2.frameIndex > 7) this.imgWalkp2.frameIndex = 0;
+    }
+  }
+
+  move() {
+    if (this.states.left) {
+      this.startPointX -= 1;
+    }
+    if (this.states.right) {
+      this.startPointX += 1;
+    }
+  }
+}
+// void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
