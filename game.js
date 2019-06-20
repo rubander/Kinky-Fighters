@@ -1,5 +1,6 @@
 var Game = {
   showHadouken: false,
+  showKikouken: false,
   canvas: undefined,
   ctx: undefined,
   fps: 60,
@@ -16,10 +17,12 @@ var Game = {
     player2right: 39,
     // player2up: 38,
     // player2down: 40,
-    player2hadouken: 73,
+    player2hadouken: 73
     // player2punch: 79,
     // player2kick: 80,
   },
+  fullLifeBar: "yellow",
+  emptyLifeBar: "red",
   init: function(canvasId) {
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext(`2d`);
@@ -41,8 +44,6 @@ var Game = {
       this.listeners();
       this.drawAll();
       this.moveAll();
-
-      
     }, 1000 / this.fps);
   },
 
@@ -51,11 +52,29 @@ var Game = {
     this.backgroundmoves = new BackMoves(this.ctx);
     this.player1 = new Player1(this.ctx, this.keys);
     this.player2 = new Player2(this.ctx, this.keys);
-    this.hadouken = new Hadouken(this.ctx, this.player1.startPointX+90, this.player1.startPointX+90)
-    this.lifeBar1 = new LifeBar(this.ctx, 80, 15, this.player1.life)
-    this.lifeBar2 = new LifeBar(this.ctx, 600, 15, this.player2.life)
-    // this.player1walk = new kenMoves(this.ctx)
-    // this.player = new Player(this.canvas.width, this.canvas.height, this.ctx, this.keys);
+    this.hadouken = new Hadouken(this.ctx, this.player1.startPointX + 90);
+    this.kikouken = new Kikouken(this.ctx, this.player2.startPointX)
+    this.lifeBar1y = new LifeBar(
+      this.ctx,
+      80,
+      15,
+      this.fullLifeBar,
+      this.player1.life
+    );
+    this.lifeBar2r = new LifeBar(
+      this.ctx,
+      600,
+      15,
+      this.emptyLifeBar,
+      this.player2.life
+    );
+    this.lifeBar2y = new LifeBar(
+      this.ctx,
+      600,
+      15,
+      this.fullLifeBar,
+      this.player2.life
+    );
     this.framesCounter = 0;
   },
 
@@ -66,25 +85,45 @@ var Game = {
   drawAll: function() {
     this.background.draw(this.framesCounter);
     this.backgroundmoves.draw(this.framesCounter);
-    this.player1.draw(this.framesCounter);
     this.player2.draw(this.framesCounter);
-    this.lifeBar1.draw();
-    // this.lifeBar2.draw();
+    this.player1.draw(this.framesCounter);
+    
+    // this.lifeBar2r.draw();
+    this.lifeBar1y.draw();
+    this.lifeBar2r.draw();
+    this.lifeBar2y.draw();
 
 
-    if (this.showHadouken) this.hadouken.drawMoving(this.framesCounter)
-    //console.log(this.hadouken.startPointX, this.player2.startPointX)    
-    if (this.hadouken.startPointX >= this.player2.startPointX) {
-      // this.hadouken.drawImpact()
-      this.hadouken.reset()
 
-      this.showHadouken = false
-
-      this.lifeBar2.reduceLife(20)
-
-      // this.player2.reduceLife(20)
+// Hadouken appearing conditions
+    if (this.showHadouken) {
+      // this.hadouken.reset(this.player1.startPointX);
+      this.hadouken.drawMoving(this.framesCounter);
     }
-    // this.player1walk.draw(this.framesCounter)
+
+    if (this.showKikouken) {
+      this.kikouken.drawMoving(this.framesCounter);
+    }
+
+// Hadouken Impact conditions
+    if (this.hadouken.startPointX >= this.player2.startPointX) {
+      this.showHadouken = false;
+      this.player2.life -= 20;
+      this.lifeBar2y.reduceLife(20);
+    }
+
+    if (this.kikouken.startPointX <= this.player1.startPointX) {
+      this.showKikouken = false;
+      this.player1.life -= 20;
+      this.lifeBar1y.reduceLife(20);
+    }
+// Reset Hadouken next to player
+    if (!this.showHadouken) {
+      this.hadouken.reset(this.player1.startPointX);      
+    }
+    if (!this.showKikouken) {
+      this.kikouken.reset(this.player2.startPointX);      
+    }
   },
 
   moveAll: function() {
@@ -92,19 +131,22 @@ var Game = {
     this.player1.move();
   },
 
-  listeners: function (){
-    document.addEventListener('keydown',(e)=>{
-      if(e.keyCode === this.keys.player2left){
-        this.player2.states.left = true
+  listeners: function() {
+    document.addEventListener("keydown", e => {
+      if (e.keyCode === this.keys.player2left) {
+        this.player2.states.left = true;
       }
-      if(e.keyCode === this.keys.player2right){
-        this.player2.states.right = true
+      if (e.keyCode === this.keys.player2right) {
+        this.player2.states.right = true;
       }
-      if(e.keyCode === this.keys.player1left){
-        this.player1.states.left = true
+      if (e.keyCode === this.keys.player1left) {
+        this.player1.states.left = true;
+        if (this.player1.startPointX < 0) {
+          this.player1.startPointX = 1;
+        }
       }
-      if(e.keyCode === this.keys.player1right){
-        this.player1.states.right = true
+      if (e.keyCode === this.keys.player1right && (this.player1.startPointX + this.player1.separator) < this.player2.startPointX) {
+        this.player1.states.right = true;
       }
       // if(e.keyCode === this.keys.player1hadouken) {
       //   this.player1.states.hadouken = true
@@ -112,30 +154,40 @@ var Game = {
       // if(e.keyCode === this.keys.player2hadouken) {
       //   this.player2.states.hadouken = true
       // }
-
-    })
-    document.addEventListener('keyup',(e)=>{
-      if(e.keyCode === this.keys.player2left){
-        this.player2.states.left = false
+    });
+    document.addEventListener("keyup", e => {
+      if (e.keyCode === this.keys.player2left) {
+        this.player2.states.left = false;
       }
-      if(e.keyCode === this.keys.player2right){
-        this.player2.states.right = false
+      if (e.keyCode === this.keys.player2right) {
+        this.player2.states.right = false;
       }
-      if(e.keyCode === this.keys.player1left){
-        this.player1.states.left = false
+      if (e.keyCode === this.keys.player1left) {
+        this.player1.states.left = false;
       }
-      if(e.keyCode === this.keys.player1right){
-        this.player1.states.right = false
+      if (e.keyCode === this.keys.player1right) {
+        this.player1.states.right = false;
       }
-      if(e.keyCode === this.keys.player1hadouken) {
-        this.player1.states.hadouken = true
-        this.showHadouken = true
+      if (e.keyCode === this.keys.player1hadouken) {
+        this.player1.states.hadouken = true;
+        this.showHadouken = true;
       }
-      if(e.keyCode === this.keys.player2hadouken) {
-        this.player2.states.hadouken = true
+      if (e.keyCode === this.keys.player2hadouken) {
+        this.player2.states.hadouken = true;
+        this.showKikouken = true
       }
-    })
-
+    });
+    if (this.player1.startPointX < 0) {
+      this.player1.startPointX = 1;
+    }
+    
+    if ((this.player1.startPointX + this.player1.separator) > this.player2.startPointX) {
+      this.player2.states.left = false
+      this.player1.states.right = false
+    }
+    if (this.player2.startPointX > 840) {
+      this.player2.startPointX = 840;
+    }
   }
 };
 

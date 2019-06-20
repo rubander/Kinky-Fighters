@@ -11,8 +11,13 @@ class Player1 {
     };
     this.startPointX = 200;
     this.startPointY = 150;
+    this.separator = 65
     this.yFrameAdjuster = 2.5;
     this.life = 100;
+
+    if (this.startPointX === 0) {
+      this.startPoint += 1
+    }
 
     // Idle Image
     this.imgIdlep1 = new Image();
@@ -67,6 +72,7 @@ class Player1 {
       this.kenIdleY * this.yFrameAdjuster
     );
 
+    
     this.animateImgIdle(framesCounter);
   }
 

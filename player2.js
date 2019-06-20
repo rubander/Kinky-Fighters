@@ -13,6 +13,8 @@ class Player2 {
     this.startPointY = 150;
     this.yFrameAdjuster = 2.5
     this.life = 100;
+    this.separator = this.startPointX - 50
+
 
     // Idle Image
     this.imgIdlep2 = new Image();
@@ -46,7 +48,8 @@ class Player2 {
       this.drawHadouken(framesCounter);
         setTimeout(() => {
           this.states.hadouken = false
-        }, 575 )
+          this.imgHadoup2.frameIndex = 3
+        }, 630 )
     } else {
       this.drawIdle(framesCounter);
     }

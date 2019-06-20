@@ -2,16 +2,17 @@ class LifeBar {
     maxWidth = 300
     totalLifePoints = 100
 
-    constructor(ctx, x, y, currentLifePoints) {
+    constructor(ctx, x, y, color, currentLifePoints) {
         this.ctx = ctx
         this.x = x
         this.y = y 
+        this.color = color
         this.currentLifePoints = currentLifePoints
 
     }
 
     draw (reducedLifePoints) {
-        this.ctx.fillStyle = "yellow";
+        this.ctx.fillStyle = this.color;
         this.ctx.beginPath();
         this.ctx.rect(this.x, this.y, this.maxWidth, 30)
         this.ctx.fill();
@@ -20,7 +21,6 @@ class LifeBar {
     }
 
     reduceLife(reducedLifePoints) {
-        this.ctx.fillStyle = "red"
         this.currentLifePoints -= reducedLifePoints
         
         let newLength = this.maxWidth * (this.currentLifePoints) / this.totalLifePoints
