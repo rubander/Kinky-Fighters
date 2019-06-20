@@ -2,10 +2,10 @@
 // backgroundAudio.loop = true;
 // backgroundAudio.volume = 1;
       
-window.onload = function() {
-    Game.init("mycanvas");
-    // backgroundAudio.load();
+// window.onload = function() {
+//     Game.init("mycanvas");
+//     // backgroundAudio.load();
     
-  };
-
-
+//   };
+document.getElementById("gameStart").onclick = () => {
+   Game.init("mycanvas")};

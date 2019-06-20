@@ -33,17 +33,44 @@ var Game = {
     this.fps = 60;
 
     this.reset();
-
+    playMusic();
+    document.addEventListener("keydown", e => {
+      if (e.keyCode === this.keys.player1hadouken) {
+        playHadouken();
+      }
+      if (e.keyCode === this.keys.player2hadouken) {
+        playKikouken();
+      }
+    });
+    if (this.showHadouken || this.showKikouken) {
+      playHit();
+    }
     this.interval = setInterval(() => {
+      // let intervalID = setInterval(() => {
       this.clear();
       this.framesCounter++;
 
       if (this.framesCounter > 1000) {
         this.framesCounter = 0;
       }
+      
       this.listeners();
       this.drawAll();
       this.moveAll();
+      if (this.player2.imgDiep2.frameIndex === 0) {
+        this.clear();
+        this.stop();
+        stopMusic()
+        playWin()
+        this.drawWin()
+      } else if (this.player1.imgDiep1.frameIndex === 4) {
+        this.clear();
+        this.stop();
+        stopMusic()
+        playWin()
+        this.drawWin()
+      }
+      console.log(this.lifeBar1y.currentLifePoints);
     }, 1000 / this.fps);
   },
 
@@ -53,28 +80,12 @@ var Game = {
     this.player1 = new Player1(this.ctx, this.keys);
     this.player2 = new Player2(this.ctx, this.keys);
     this.hadouken = new Hadouken(this.ctx, this.player1.startPointX + 90);
-    this.kikouken = new Kikouken(this.ctx, this.player2.startPointX)
-    this.lifeBar1y = new LifeBar(
-      this.ctx,
-      80,
-      15,
-      this.fullLifeBar,
-      this.player1.life
-    );
-    this.lifeBar2r = new LifeBar(
-      this.ctx,
-      600,
-      15,
-      this.emptyLifeBar,
-      this.player2.life
-    );
-    this.lifeBar2y = new LifeBar(
-      this.ctx,
-      600,
-      15,
-      this.fullLifeBar,
-      this.player2.life
-    );
+    this.kikouken = new Kikouken(this.ctx, this.player2.startPointX);
+    this.lifeBar1r = new LifeBarRed(this.ctx, 80, 15, this.emptyLifeBar, 100);
+    this.lifeBar1y = new LifeBar(this.ctx, 80, 15, this.fullLifeBar, 100);
+    this.lifeBar2r = new LifeBarRed(this.ctx, 600, 15, this.emptyLifeBar, 100);
+    this.lifeBar2y = new LifeBar(this.ctx, 600, 15, this.fullLifeBar, 100);
+    this.winImg = new YouWin(this.ctx);
     this.framesCounter = 0;
   },
 
@@ -87,15 +98,14 @@ var Game = {
     this.backgroundmoves.draw(this.framesCounter);
     this.player2.draw(this.framesCounter);
     this.player1.draw(this.framesCounter);
-    
+
     // this.lifeBar2r.draw();
+    this.lifeBar1r.draw();
     this.lifeBar1y.draw();
     this.lifeBar2r.draw();
     this.lifeBar2y.draw();
 
-
-
-// Hadouken appearing conditions
+    // Hadouken appearing conditions
     if (this.showHadouken) {
       // this.hadouken.reset(this.player1.startPointX);
       this.hadouken.drawMoving(this.framesCounter);
@@ -105,7 +115,7 @@ var Game = {
       this.kikouken.drawMoving(this.framesCounter);
     }
 
-// Hadouken Impact conditions
+    // Hadouken Impact conditions
     if (this.hadouken.startPointX >= this.player2.startPointX) {
       this.showHadouken = false;
       this.player2.life -= 20;
@@ -117,18 +127,22 @@ var Game = {
       this.player1.life -= 20;
       this.lifeBar1y.reduceLife(20);
     }
-// Reset Hadouken next to player
+    // Reset Hadouken next to player
     if (!this.showHadouken) {
-      this.hadouken.reset(this.player1.startPointX);      
+      this.hadouken.reset(this.player1.startPointX);
     }
     if (!this.showKikouken) {
-      this.kikouken.reset(this.player2.startPointX);      
+      this.kikouken.reset(this.player2.startPointX);
     }
   },
 
   moveAll: function() {
     this.player2.move();
     this.player1.move();
+  },
+
+  drawWin: function() {
+    this.winImg.draw()
   },
 
   listeners: function() {
@@ -145,7 +159,11 @@ var Game = {
           this.player1.startPointX = 1;
         }
       }
-      if (e.keyCode === this.keys.player1right && (this.player1.startPointX + this.player1.separator) < this.player2.startPointX) {
+      if (
+        e.keyCode === this.keys.player1right &&
+        this.player1.startPointX + this.player1.separator <
+          this.player2.startPointX
+      ) {
         this.player1.states.right = true;
       }
       // if(e.keyCode === this.keys.player1hadouken) {
@@ -174,22 +192,66 @@ var Game = {
       }
       if (e.keyCode === this.keys.player2hadouken) {
         this.player2.states.hadouken = true;
-        this.showKikouken = true
+        this.showKikouken = true;
       }
     });
     if (this.player1.startPointX < 0) {
       this.player1.startPointX = 1;
     }
-    
-    if ((this.player1.startPointX + this.player1.separator) > this.player2.startPointX) {
-      this.player2.states.left = false
-      this.player1.states.right = false
+
+    if (
+      this.player1.startPointX + this.player1.separator >
+      this.player2.startPointX
+    ) {
+      this.player2.states.left = false;
+      this.player1.states.right = false;
     }
     if (this.player2.startPointX > 840) {
       this.player2.startPointX = 840;
     }
+    // if (this.player2.lose) {
+    //   clearInterval(intervalID);
+    // }
+  },
+  stop: function() {
+       clearInterval(this.interval);
   }
 };
+
+let kenStage = new Audio("./audio/ken.mp3");
+
+function playMusic() {
+  kenStage.volume = 0.2;
+  kenStage.play();
+}
+
+function stopMusic() {
+  kenStage.pause()
+}
+
+function playWin(){
+  let win = new Audio("./audio/victory.mp3")
+  win.volume = 0.4
+  win.play()
+}
+
+function playHadouken() {
+  let hadouSound = new Audio("./audio/hadouken.mp3");
+  hadouSound.volume = 0.4;
+  hadouSound.play();
+}
+
+function playKikouken() {
+  let kikouSound = new Audio("./audio/kikoken.mp3");
+  kikouSound.volume = 0.4;
+  kikouSound.play();
+}
+
+function playHit() {
+  let hitSound = new Audio("./audio/hit.mp3");
+  hitSound.volume = 0.4;
+  hitSound.play();
+}
 
 // function sound(src) {
 //     this.sound = document.createElement("audio");

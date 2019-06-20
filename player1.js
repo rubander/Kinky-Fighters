@@ -42,7 +42,15 @@ class Player1 {
     this.kenHadouY = 92;
     this.imgHadoup1.frames = 4;
     this.imgHadoup1.frameIndex = 0;
-  }
+
+    // Die Image
+    this.imgDiep1 = new Image();
+    this.imgDiep1.src = "./img/ken_die.png";
+    this.kenDieX = 390;
+    this.kenDieY = 92;
+    this.imgDiep1.frames = 5;
+    this.imgDiep1.frameIndex = 0;
+ }
 
   draw(framesCounter) {
     if (this.states.left || this.states.right) {
@@ -53,6 +61,8 @@ class Player1 {
           this.states.hadouken = false
           this.imgHadoup1.frameIndex = 0
         }, 600 )
+    } else if (this.life <= 0) {
+      this.drawDie(framesCounter)
     } else {
       this.drawIdle(framesCounter);
     }
@@ -139,6 +149,38 @@ class Player1 {
 
     }
   }
+
+  drawDie(framesCounter) {
+    this.ctx.save()
+    this.ctx.drawImage(
+      this.imgDiep1,
+      this.imgDiep1.frameIndex *
+        Math.floor(this.kenDieX / this.imgDiep1.frames),
+      0,
+      Math.floor(this.kenDieX / this.imgDiep1.frames),
+      this.kenDieY,
+      this.startPointX,
+      this.startPointY,
+      this.kenDieX / 1.5,
+      this.kenDieY * this.yFrameAdjuster
+    );
+    this.ctx.translate(100, 0)
+    this.ctx.restore()
+    this.animateImgDie(framesCounter);
+  }
+
+  animateImgDie(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 30 === 0) {
+      this.imgDiep1.frameIndex +=1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgDiep1.frameIndex > 4) {
+        this.imgDiep1.frameIndex = 4
+       };
+    }
+  }
+
 
   move() {
     if (this.states.left) {

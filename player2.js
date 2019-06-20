@@ -14,6 +14,7 @@ class Player2 {
     this.yFrameAdjuster = 2.5
     this.life = 100;
     this.separator = this.startPointX - 50
+    this.lose = false
 
 
     // Idle Image
@@ -39,6 +40,14 @@ class Player2 {
     this.chunHadouY = 107;
     this.imgHadoup2.frames = 4;
     this.imgHadoup2.frameIndex = 3;
+
+     // Die Image
+     this.imgDiep2 = new Image();
+     this.imgDiep2.src = "./img/chun_die.png";
+     this.chunDieX = 332;
+     this.chunDieY = 100;
+     this.imgDiep2.frames = 4;
+     this.imgDiep2.frameIndex = 3;
   }
 
   draw(framesCounter) {
@@ -50,7 +59,11 @@ class Player2 {
           this.states.hadouken = false
           this.imgHadoup2.frameIndex = 3
         }, 630 )
-    } else {
+    } else if (this.life <= 0) {
+      this.drawDie(framesCounter)
+      this.lose = true
+    }
+    else {
       this.drawIdle(framesCounter);
     }
   }
@@ -133,6 +146,38 @@ class Player2 {
       if (this.imgHadoup2.frameIndex < 0) this.imgHadoup2.frameIndex = 3;
     }
   }
+
+  drawDie(framesCounter) {
+    this.ctx.save()
+    this.ctx.drawImage(
+      this.imgDiep2,
+      this.imgDiep2.frameIndex *
+        Math.floor(this.chunDieX / this.imgDiep2.frames),
+      0,
+      Math.floor(this.chunDieX / this.imgDiep2.frames),
+      this.chunDieY,
+      this.startPointX,
+      this.startPointY,
+      this.chunDieX / 1.5,
+      this.chunDieY * this.yFrameAdjuster
+    );
+    this.ctx.translate(10, 0)
+    this.ctx.restore()
+    this.animateImgDie(framesCounter);
+  }
+
+  animateImgDie(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 30 === 0) {
+      this.imgDiep2.frameIndex -=1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgDiep2.frameIndex < 0) {
+        this.imgDiep2.frameIndex = 0
+       };
+    }
+  }
+
 
   move() {
     if (this.states.left) {

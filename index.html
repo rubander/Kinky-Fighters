@@ -1,21 +1,25 @@
 <html>
-<head>
-  <title></title>
-  <style>
-    canvas {
-      border: 1px solid black;
-    }
-  </style>
-  <script type="text/javascript" src="background.js"></script>
-  <script type="text/javascript" src="player1.js"></script>
-  <script type="text/javascript" src="player2.js"></script>
-  <script type="text/javascript" src="hadouken.js"></script>
-  <script type="text/javascript" src="lifebars.js"></script>
-  <script type="text/javascript" src="game.js"></script>
-  <script type="text/javascript" src="init.js"></script>
-</head>
-<body>
+  <head>
+    <title>Kinky Fighters</title>
+    <link rel="stylesheet" href="kinky.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+   
+  </head>
+  <body>
     <!-- <audio controls autoplay><source src="audio/ken.mp3" type='audio/mpeg; codecs="mp3"'></audio> -->
-  <canvas id="mycanvas" width="1000" height="440" ></canvas>
-</body>
+    <div class="game">
+      <div class ="cuatro">
+        
+      </div>
+      <canvas id="mycanvas" width="1000" height="440"></canvas>
+      <div class="cuatro"><button id="gameStart">INSERT COIN</button></div>
+    </div>
+    <script type="text/javascript" src="background.js"></script>
+    <script type="text/javascript" src="player1.js"></script>
+    <script type="text/javascript" src="player2.js"></script>
+    <script type="text/javascript" src="hadouken.js"></script>
+    <script type="text/javascript" src="lifebars.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="init.js"></script>
+  </body>
 </html>
