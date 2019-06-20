@@ -4,10 +4,15 @@ class Player1 {
     this.keys = keys;
     this.states = {
       left: false,
-      right: false
+      right: false,
+      punch: false,
+      kick: false,
+      hadouken: false
     };
     this.startPointX = 200;
     this.startPointY = 150;
+    this.yFrameAdjuster = 2.5;
+    this.life = 100;
 
     // Idle Image
     this.imgIdlep1 = new Image();
@@ -24,11 +29,25 @@ class Player1 {
     this.kenWalkY = 92;
     this.imgWalkp1.frames = 5;
     this.imgWalkp1.frameIndex = 0;
+
+    // Hadouken Image
+    this.imgHadoup1 = new Image();
+    this.imgHadoup1.src = "./img/ken_hadouken.png";
+    this.kenHadouX = 288;
+    this.kenHadouY = 92;
+    this.imgHadoup1.frames = 4;
+    this.imgHadoup1.frameIndex = 0;
   }
 
   draw(framesCounter) {
     if (this.states.left || this.states.right) {
       this.drawWalk(framesCounter);
+    } else if (this.states.hadouken) {
+      this.drawHadouken(framesCounter);
+        setTimeout(() => {
+          this.states.hadouken = false
+          this.imgHadoup1.frameIndex = 0
+        }, 600 )
     } else {
       this.drawIdle(framesCounter);
     }
@@ -45,7 +64,7 @@ class Player1 {
       this.startPointX,
       this.startPointY,
       this.kenIdleX / 1.5,
-      this.kenIdleY * 2.5
+      this.kenIdleY * this.yFrameAdjuster
     );
 
     this.animateImgIdle(framesCounter);
@@ -53,7 +72,7 @@ class Player1 {
 
   animateImgIdle(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
-    if (framesCounter % 40 === 0) {
+    if (framesCounter % 10 === 0) {
       this.imgIdlep1.frameIndex += 1;
 
       // Si el frame es el último, se vuelve al primero
@@ -72,26 +91,55 @@ class Player1 {
       this.startPointX,
       this.startPointY,
       this.kenWalkX / 2,
-      this.kenWalkY * 2.5
+      this.kenWalkY * this.yFrameAdjuster
     );
 
     this.animateImgWalk(framesCounter);
   }
 
   animateImgWalk(framesCounter) {
-    if (framesCounter % 40 === 0) {
+    if (framesCounter % 10 === 0) {
       this.imgWalkp1.frameIndex += 1;
 
       if (this.imgWalkp1.frameIndex > 4) this.imgWalkp1.frameIndex = 0;
     }
   }
 
+  drawHadouken(framesCounter) {
+
+    this.ctx.drawImage(
+      this.imgHadoup1,
+      this.imgHadoup1.frameIndex *
+        Math.floor(this.kenHadouX / this.imgHadoup1.frames),
+      0,
+      Math.floor(this.kenHadouX / this.imgHadoup1.frames),
+      this.kenHadouY,
+      this.startPointX,
+      this.startPointY,
+      this.kenHadouX / 1.5,
+      this.kenHadouY * this.yFrameAdjuster
+    )
+    
+    this.animateImgHadou(framesCounter);
+  }
+
+  animateImgHadou(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 10 === 0 && this.imgHadoup1.frameIndex < 4) {
+      this.imgHadoup1.frameIndex += 1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgHadoup1.frameIndex > 3) this.imgHadoup1.frameIndex = 0;
+
+    }
+  }
+
   move() {
     if (this.states.left) {
-      this.startPointX -= 1;
+      this.startPointX -= 3;
     }
     if (this.states.right) {
-      this.startPointX += 1;
+      this.startPointX += 3;
     }
   }
 }

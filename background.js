@@ -50,7 +50,7 @@ class BackMoves extends Background {
 
   animateImg(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
-    if (framesCounter % 50 === 0) {
+    if (framesCounter % 20 === 0) {
       this.imgbluesir.frameIndex += 1;
 
       // Si el frame es el último, se vuelve al primero
