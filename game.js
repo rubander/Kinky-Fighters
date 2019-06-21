@@ -57,13 +57,27 @@ var Game = {
       this.listeners();
       this.drawAll();
       this.moveAll();
+
+      if (this.player1.imgDiep1.frameIndex === 5) {
+        this.player2.victory = true
+        
+      }
+      if (this.player2.imgVictoryp2.frameIndex === 17)
+      chunLaugh();
+      if (this.player2.imgVictoryp2.frameIndex === 2) {
+        chunYatta();
+      }
       if (this.player2.imgDiep2.frameIndex === 0) {
+          this.player1.victory = true
+        }
+      if (this.player1.imgVictoryp1.frameIndex === 3) {
         
         this.stop();
         stopMusic()
         playWin()
         this.drawKenWin()
-      } else if (this.player1.imgDiep1.frameIndex === 5) {
+      } else if (this.player2.imgVictoryp2.frameIndex === 0) {
+
         this.stop();
         stopMusic()
         playWin()
@@ -147,6 +161,7 @@ var Game = {
   drawChunWin: function() {
     this.cWinImg.draw()
   },
+  
 
   listeners: function() {
     document.addEventListener("keydown", e => {
@@ -217,6 +232,11 @@ var Game = {
       this.player1.states.right = false
       this.player1.states.hadouken = false
     }
+    if (this.player1.life <= 0){
+      this.player2.states.left = false
+      this.player2.states.right = false
+      this.player2.states.hadouken = false
+    }
     // if (this.player2.lose) {
     //   clearInterval(intervalID);
     // }
@@ -254,6 +274,18 @@ function playKikouken() {
   kikouSound.volume = 0.4;
   kikouSound.play();
 }
+
+function chunLaugh() {
+  let laughSound = new Audio("./audio/chun-laugh.mp3");
+  laughSound.volume = 0.4;
+  laughSound.play();
+}
+
+  function chunYatta() {
+    let yattaSound = new Audio("./audio/chun-yatta.mp3");
+    yattaSound.volume = 0.4;
+    yattaSound.play();
+  }
 
 function playHit() {
   let hitSound = new Audio("./audio/hit.mp3");

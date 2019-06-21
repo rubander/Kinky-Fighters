@@ -14,6 +14,7 @@ class Player1 {
     this.separator = 65
     this.yFrameAdjuster = 2.5;
     this.life = 100;
+    this.victory = false;
 
     if (this.startPointX === 0) {
       this.startPoint += 1
@@ -50,6 +51,14 @@ class Player1 {
     this.kenDieY = 92;
     this.imgDiep1.frames = 6;
     this.imgDiep1.frameIndex = 0;
+
+    // Victory Image
+    this.imgVictoryp1 = new Image();
+    this.imgVictoryp1.src = "./img/ken_victory.png";
+    this.kenVictoryX = 192;
+    this.kenVictoryY = 92;
+    this.imgVictoryp1.frames = 4;
+    this.imgVictoryp1.frameIndex = 0;
  }
 
   draw(framesCounter) {
@@ -63,7 +72,10 @@ class Player1 {
         }, 600 )
     } else if (this.life <= 0) {
       this.drawDie(framesCounter)
-    } else {
+    } else if (this.victory){
+      this.drawVictory(framesCounter)
+    }
+    else {
       this.drawIdle(framesCounter);
     }
   }
@@ -175,9 +187,37 @@ class Player1 {
       this.imgDiep1.frameIndex +=1;
 
       // Si el frame es el último, se vuelve al primero
-      if (this.imgDiep1.frameIndex > 5) {
-        this.imgDiep1.frameIndex = 6
+      if (this.imgDiep1.frameIndex > 4) {
+        this.imgDiep1.frameIndex = 5
        };
+    }
+  }
+
+  drawVictory(framesCounter) {
+    this.ctx.drawImage(
+      this.imgVictoryp1,
+      this.imgVictoryp1.frameIndex *
+        Math.floor(this.kenVictoryX / this.imgVictoryp1.frames),
+      0,
+      Math.floor(this.kenVictoryX / this.imgVictoryp1.frames),
+      this.kenVictoryY,
+      this.startPointX,
+      this.startPointY,
+      this.kenVictoryX / 1.5,
+      this.kenVictoryY * this.yFrameAdjuster
+    );
+
+    
+    this.animateImgVictory(framesCounter);
+  }
+
+  animateImgVictory(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 30 === 0) {
+      this.imgVictoryp1.frameIndex += 1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgVictoryp1.frameIndex > 2) this.imgVictoryp1.frameIndex = 3;
     }
   }
 

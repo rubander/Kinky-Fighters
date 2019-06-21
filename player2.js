@@ -11,11 +11,11 @@ class Player2 {
     };
     this.startPointX = 660;
     this.startPointY = 150;
-    this.yFrameAdjuster = 2.5
+    this.yFrameAdjuster = 2.5;
     this.life = 100;
-    this.separator = this.startPointX - 50
-    this.lose = false
-
+    this.separator = this.startPointX - 50;
+    this.lose = false;
+    this.victory = false;
 
     // Idle Image
     this.imgIdlep2 = new Image();
@@ -41,13 +41,21 @@ class Player2 {
     this.imgHadoup2.frames = 4;
     this.imgHadoup2.frameIndex = 3;
 
-     // Die Image
-     this.imgDiep2 = new Image();
-     this.imgDiep2.src = "./img/chun_die.png";
-     this.chunDieX = 415;
-     this.chunDieY = 92;
-     this.imgDiep2.frames = 5;
-     this.imgDiep2.frameIndex = 4;
+    // Die Image
+    this.imgDiep2 = new Image();
+    this.imgDiep2.src = "./img/chun_die.png";
+    this.chunDieX = 415;
+    this.chunDieY = 92;
+    this.imgDiep2.frames = 5;
+    this.imgDiep2.frameIndex = 4;
+
+    // Victory Image
+    this.imgVictoryp2 = new Image();
+    this.imgVictoryp2.src = "./img/chun_victory.png";
+    this.chunVictoryX = 988;
+    this.chunVictoryY = 142;
+    this.imgVictoryp2.frames = 19;
+    this.imgVictoryp2.frameIndex = 18;
   }
 
   draw(framesCounter) {
@@ -55,15 +63,16 @@ class Player2 {
       this.drawWalk(framesCounter);
     } else if (this.states.hadouken) {
       this.drawHadouken(framesCounter);
-        setTimeout(() => {
-          this.states.hadouken = false
-          this.imgHadoup2.frameIndex = 3
-        }, 630 )
+      setTimeout(() => {
+        this.states.hadouken = false;
+        this.imgHadoup2.frameIndex = 3;
+      }, 630);
     } else if (this.life <= 0) {
-      this.drawDie(framesCounter)
-      this.lose = true
-    }
-    else {
+      this.drawDie(framesCounter);
+      this.lose = true;
+    } else if (this.victory) {
+      this.drawVictory(framesCounter)
+    } else {
       this.drawIdle(framesCounter);
     }
   }
@@ -129,7 +138,7 @@ class Player2 {
       Math.floor(this.chunHadouX / this.imgHadoup2.frames),
       this.chunHadouY,
       this.startPointX,
-      this.startPointY-33,
+      this.startPointY - 33,
       this.chunHadouX / 1.5,
       this.chunHadouY * this.yFrameAdjuster
     );
@@ -140,7 +149,7 @@ class Player2 {
   animateImgHadou(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
     if (framesCounter % 12 === 0) {
-      this.imgHadoup2.frameIndex -=1;
+      this.imgHadoup2.frameIndex -= 1;
 
       // Si el frame es el último, se vuelve al primero
       if (this.imgHadoup2.frameIndex < 0) this.imgHadoup2.frameIndex = 3;
@@ -148,7 +157,7 @@ class Player2 {
   }
 
   drawDie(framesCounter) {
-    this.ctx.save()
+    this.ctx.save();
     this.ctx.drawImage(
       this.imgDiep2,
       this.imgDiep2.frameIndex *
@@ -157,27 +166,55 @@ class Player2 {
       Math.floor(this.chunDieX / this.imgDiep2.frames),
       this.chunDieY,
       this.startPointX,
-      this.startPointY,
+      this.startPointY+20,
       this.chunDieX / 1.5,
       this.chunDieY * this.yFrameAdjuster
     );
-    this.ctx.translate(10, 0)
-    this.ctx.restore()
+    this.ctx.restore();
     this.animateImgDie(framesCounter);
   }
 
   animateImgDie(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
     if (framesCounter % 20 === 0) {
-      this.imgDiep2.frameIndex -=1;
+      this.imgDiep2.frameIndex -= 1;
 
       // Si el frame es el último, se vuelve al primero
       if (this.imgDiep2.frameIndex < 0) {
-        this.imgDiep2.frameIndex = 0
-       };
+        this.imgDiep2.frameIndex = 0;
+      }
     }
   }
 
+  drawVictory(framesCounter) {
+    this.ctx.save();
+    this.ctx.drawImage(
+      this.imgVictoryp2,
+      this.imgVictoryp2.frameIndex *
+        Math.floor(this.chunVictoryX / this.imgVictoryp2.frames),
+      0,
+      Math.floor(this.chunVictoryX / this.imgVictoryp2.frames),
+      this.chunVictoryY,
+      this.startPointX,
+      this.startPointY-125,
+      this.chunVictoryX / 6,
+      this.chunVictoryY * this.yFrameAdjuster
+    );
+    this.ctx.restore();
+    this.animateImgVictory(framesCounter);
+  }
+
+  animateImgVictory(framesCounter) {
+    // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
+    if (framesCounter % 10 === 0) {
+      this.imgVictoryp2.frameIndex -= 1;
+
+      // Si el frame es el último, se vuelve al primero
+      if (this.imgVictoryp2.frameIndex < 0) {
+        this.imgVictoryp2.frameIndex = 0;
+      }
+    }
+  }
 
   move() {
     if (this.states.left) {
