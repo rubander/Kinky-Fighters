@@ -1,3 +1,12 @@
+.cabinet {
+  background-image: url("img/arcade_cabinet2.png");
+  background-repeat: no-repeat;
+  background-size: auto;
+  display: flex;
+  justify-content: center;
+  height: 1005px;
+}
+
 .game {
   display: flex;
   flex-direction: column;
@@ -8,10 +17,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 200;
+    height: 210;
     width: 200
 }
 canvas {
   border: 1px solid black;
-  align-items: center 
+  align-items: center;
+  margin-left: -145;
+  margin-bottom: 120px;
 }

@@ -46,9 +46,9 @@ class Player1 {
     // Die Image
     this.imgDiep1 = new Image();
     this.imgDiep1.src = "./img/ken_die.png";
-    this.kenDieX = 390;
+    this.kenDieX = 468;
     this.kenDieY = 92;
-    this.imgDiep1.frames = 5;
+    this.imgDiep1.frames = 6;
     this.imgDiep1.frameIndex = 0;
  }
 
@@ -160,8 +160,8 @@ class Player1 {
       Math.floor(this.kenDieX / this.imgDiep1.frames),
       this.kenDieY,
       this.startPointX,
-      this.startPointY,
-      this.kenDieX / 1.5,
+      this.startPointY +5,
+      this.kenDieX / 2,
       this.kenDieY * this.yFrameAdjuster
     );
     this.ctx.translate(100, 0)
@@ -171,12 +171,12 @@ class Player1 {
 
   animateImgDie(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
-    if (framesCounter % 30 === 0) {
+    if (framesCounter % 20 === 0) {
       this.imgDiep1.frameIndex +=1;
 
       // Si el frame es el último, se vuelve al primero
-      if (this.imgDiep1.frameIndex > 4) {
-        this.imgDiep1.frameIndex = 4
+      if (this.imgDiep1.frameIndex > 5) {
+        this.imgDiep1.frameIndex = 6
        };
     }
   }

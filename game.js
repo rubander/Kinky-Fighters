@@ -9,12 +9,12 @@ var Game = {
     player1right: 68,
     // player1up: 87,
     // player1down: 83,
-    player1hadouken: 90,
+    player1hadouken: 81,
     // player1punch: 88,
     // player1kick: 67,
 
-    player2left: 37,
-    player2right: 39,
+    player2left: 74,
+    player2right: 76,
     // player2up: 38,
     // player2down: 40,
     player2hadouken: 73
@@ -58,17 +58,16 @@ var Game = {
       this.drawAll();
       this.moveAll();
       if (this.player2.imgDiep2.frameIndex === 0) {
-        this.clear();
+        
         this.stop();
         stopMusic()
         playWin()
-        this.drawWin()
-      } else if (this.player1.imgDiep1.frameIndex === 4) {
-        this.clear();
+        this.drawKenWin()
+      } else if (this.player1.imgDiep1.frameIndex === 5) {
         this.stop();
         stopMusic()
         playWin()
-        this.drawWin()
+        this.drawChunWin()
       }
       console.log(this.lifeBar1y.currentLifePoints);
     }, 1000 / this.fps);
@@ -85,7 +84,8 @@ var Game = {
     this.lifeBar1y = new LifeBar(this.ctx, 80, 15, this.fullLifeBar, 100);
     this.lifeBar2r = new LifeBarRed(this.ctx, 600, 15, this.emptyLifeBar, 100);
     this.lifeBar2y = new LifeBar(this.ctx, 600, 15, this.fullLifeBar, 100);
-    this.winImg = new YouWin(this.ctx);
+    this.kWinImg = new KenWins(this.ctx);
+    this.cWinImg = new ChunWins(this.ctx);
     this.framesCounter = 0;
   },
 
@@ -141,8 +141,11 @@ var Game = {
     this.player1.move();
   },
 
-  drawWin: function() {
-    this.winImg.draw()
+  drawKenWin: function() {
+    this.kWinImg.draw()
+  },
+  drawChunWin: function() {
+    this.cWinImg.draw()
   },
 
   listeners: function() {
@@ -208,6 +211,11 @@ var Game = {
     }
     if (this.player2.startPointX > 840) {
       this.player2.startPointX = 840;
+    }
+    if (this.player2.life <= 0){
+      this.player1.states.left = false
+      this.player1.states.right = false
+      this.player1.states.hadouken = false
     }
     // if (this.player2.lose) {
     //   clearInterval(intervalID);

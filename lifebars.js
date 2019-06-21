@@ -54,12 +54,12 @@ class LifeBarRed {
 
 }
 
-class YouWin {
+class KenWins {
 
     constructor(ctx){
         this.ctx = ctx
         this.winImg = new Image();
-        this.winImg.src = "./img/you_win.png"
+        this.winImg.src = "./img/Ken_wins.png"
     }
 
     draw () {this.ctx.drawImage(
@@ -68,8 +68,29 @@ class YouWin {
         0,
         600,
         286,
-        300,
-        180,
+        360,
+        60,
+        600,
+        286,
+      )}
+}
+
+class ChunWins {
+
+    constructor(ctx){
+        this.ctx = ctx
+        this.winImg = new Image();
+        this.winImg.src = "./img/chun_wins.png"
+    }
+
+    draw () {this.ctx.drawImage(
+        this.winImg,
+        0,
+        0,
+        600,
+        286,
+        340,
+        60,
         600,
         286,
       )}

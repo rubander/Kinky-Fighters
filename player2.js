@@ -44,10 +44,10 @@ class Player2 {
      // Die Image
      this.imgDiep2 = new Image();
      this.imgDiep2.src = "./img/chun_die.png";
-     this.chunDieX = 332;
-     this.chunDieY = 100;
-     this.imgDiep2.frames = 4;
-     this.imgDiep2.frameIndex = 3;
+     this.chunDieX = 415;
+     this.chunDieY = 92;
+     this.imgDiep2.frames = 5;
+     this.imgDiep2.frameIndex = 4;
   }
 
   draw(framesCounter) {
@@ -168,7 +168,7 @@ class Player2 {
 
   animateImgDie(framesCounter) {
     // se va cambiando el frame. Cuanto mayor es el módulo, mas lento se mueve el personaje
-    if (framesCounter % 30 === 0) {
+    if (framesCounter % 20 === 0) {
       this.imgDiep2.frameIndex -=1;
 
       // Si el frame es el último, se vuelve al primero
