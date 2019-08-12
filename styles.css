@@ -23,6 +23,7 @@
 canvas {
   border: 1px solid black;
   align-items: center;
-  margin-left: -145;
+  margin-left: -150;
   margin-bottom: 120px;
+  background-color: black;
 }
